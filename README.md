@@ -7,7 +7,7 @@ go get -u github.com/gofiber/logger
 ```go
 package main
 
-import 
+import (
   "github.com/gofiber/fiber"
   "github.com/gofiber/logger"
 )
