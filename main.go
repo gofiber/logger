@@ -20,9 +20,9 @@ import (
 
 // Config ...
 type Config struct {
-	// Skip defines a function to skip middleware.
+	// Filter defines a function to skip middleware.
 	// Optional. Default: nil
-	Skip func(*fiber.Ctx) bool
+	Filter func(*fiber.Ctx) bool
 	// Format defines the logging format with defined variables
 	// Optional. Default: "${time} - ${ip} - ${method} ${path}\t${ua}\n"
 	// Possible values: time, ip, url, host, method, path, protocol
@@ -73,8 +73,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 	}
 	// Middleware function
 	return func(c *fiber.Ctx) {
-		// Skip middleware if Skip returns true
-		if cfg.Skip != nil && cfg.Skip(c) {
+		// Filter request to skip middleware
+		if cfg.Filter != nil && cfg.Filter(c) {
 			c.Next()
 			return
 		}
