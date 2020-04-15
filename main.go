@@ -110,6 +110,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 				return buf.WriteString(stop.Sub(start).String())
 			case "status":
 				return buf.WriteString(strconv.Itoa(c.Fasthttp.Response.StatusCode()))
+			case "body":
+				return buf.WriteString(c.Body())
 			default:
 				switch {
 				case strings.HasPrefix(tag, "header:"):
@@ -120,6 +122,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 					return buf.WriteString(c.FormValue(tag[5:]))
 				case strings.HasPrefix(tag, "cookie:"):
 					return buf.WriteString(c.Cookies(tag[7:]))
+				case strings.HasPrefix(tag, "body:"):
+					return buf.WriteString(c.Body(tag[5:]))
 				}
 			}
 			return 0, nil
