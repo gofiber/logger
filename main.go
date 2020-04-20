@@ -24,9 +24,10 @@ type Config struct {
 	// Optional. Default: nil
 	Filter func(*fiber.Ctx) bool
 	// Format defines the logging format with defined variables
-	// Optional. Default: "${time} - ${ip} - ${method} ${path}\t${ua}\n"
+	// Optional. Default: "${time} ${method} ${path} - ${ip} - ${status} - ${latency}\n"
 	// Possible values: time, ip, url, host, method, path, protocol
-	// referer, ua, header:<key>, query:<key>, formform:<key>, cookie:<key>
+	// referer, ua, header:<key>, query:<key>, form:<key>, cookie:<key>
+	// latency, status, body, body:<key>
 	Format string
 	// TimeFormat https://programming.guide/go/format-parse-string-time-date-example.html
 	// Optional. Default: 15:04:05
