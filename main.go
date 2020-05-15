@@ -26,7 +26,7 @@ type Config struct {
 	// Format defines the logging format with defined variables
 	// Optional. Default: "${time} ${method} ${path} - ${ip} - ${status} - ${latency}\n"
 	// Possible values:
-	// time, ip, url, host, method, path, protocol
+	// time, ip, ips, url, host, method, path, protocol
 	// referer, ua, latency, status, body, error
 	// header:<key>, query:<key>, form:<key>, cookie:<key>
 	Format string
@@ -69,7 +69,7 @@ func New(config ...Config) func(*fiber.Ctx) {
 		go func() {
 			for {
 				timestamp = time.Now().Format(cfg.TimeFormat)
-				time.Sleep(1 * time.Second)
+				time.Sleep(250 * time.Millisecond)
 			}
 		}()
 	}
@@ -98,6 +98,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 				return buf.WriteString(c.Protocol())
 			case "ip":
 				return buf.WriteString(c.IP())
+			case "ips":
+				return buf.WriteString(c.Get(fiber.HeaderXForwardedFor))
 			case "host":
 				return buf.WriteString(c.Hostname())
 			case "method":
