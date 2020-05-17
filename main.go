@@ -5,16 +5,15 @@
 package logger
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/gofiber/fiber"
+	"github.com/valyala/bytebufferpool"
 	"github.com/valyala/fasttemplate"
 )
 
@@ -58,11 +57,6 @@ func New(config ...Config) func(*fiber.Ctx) {
 	}
 	// Middleware settings
 	tmpl := fasttemplate.New(cfg.Format, "${", "}")
-	pool := &sync.Pool{
-		New: func() interface{} {
-			return bytes.NewBuffer(make([]byte, 256))
-		},
-	}
 	timestamp := time.Now().Format(cfg.TimeFormat)
 	// Update date/time every second in a seperate go routine
 	if strings.Contains(cfg.Format, "${time}") {
@@ -85,9 +79,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 		c.Next()
 		// build log
 		stop := time.Now()
-		buf := pool.Get().(*bytes.Buffer)
-		buf.Reset()
-		defer pool.Put(buf)
+		// Get new buffer
+		buf := bytebufferpool.Get()
 		_, err := tmpl.ExecuteFunc(buf, func(w io.Writer, tag string) (int, error) {
 			switch tag {
 			case "time":
@@ -141,5 +134,6 @@ func New(config ...Config) func(*fiber.Ctx) {
 		if _, err := cfg.Output.Write(buf.Bytes()); err != nil {
 			fmt.Println(err)
 		}
+		bytebufferpool.Put(buf)
 	}
 }
