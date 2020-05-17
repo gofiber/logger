@@ -17,6 +17,28 @@ import (
 	"github.com/valyala/fasttemplate"
 )
 
+// Filter variables
+const (
+	strTime     = "time"
+	strReferer  = "referer"
+	strProtocol = "protocol"
+	strIp       = "ip"
+	strIps      = "ips"
+	strHost     = "host"
+	strMethod   = "method"
+	strPath     = "path"
+	strUrl      = "url"
+	strUa       = "ua"
+	strLatency  = "latency"
+	strStatus   = "status"
+	strBody     = "body"
+	strError    = "error"
+	strHeader   = "header:"
+	strQuery    = "query:"
+	strForm     = "form:"
+	strCookie   = "cookie:"
+)
+
 // Config ...
 type Config struct {
 	// Filter defines a function to skip middleware.
@@ -83,47 +105,44 @@ func New(config ...Config) func(*fiber.Ctx) {
 		buf := bytebufferpool.Get()
 		_, err := tmpl.ExecuteFunc(buf, func(w io.Writer, tag string) (int, error) {
 			switch tag {
-			case "time":
+			case strTime:
 				return buf.WriteString(timestamp)
-			case "referer":
+			case strReferer:
 				return buf.WriteString(c.Get(fiber.HeaderReferer))
-			case "protocol":
+			case strProtocol:
 				return buf.WriteString(c.Protocol())
-			case "ip":
+			case strIp:
 				return buf.WriteString(c.IP())
-			case "ips":
+			case strIps:
 				return buf.WriteString(c.Get(fiber.HeaderXForwardedFor))
-			case "host":
+			case strHost:
 				return buf.WriteString(c.Hostname())
-			case "method":
+			case strMethod:
 				return buf.WriteString(c.Method())
-			case "path":
+			case strPath:
 				return buf.WriteString(c.Path())
-			case "url":
+			case strUrl:
 				return buf.WriteString(c.OriginalURL())
-			case "ua":
+			case strUa:
 				return buf.WriteString(c.Get(fiber.HeaderUserAgent))
-			case "latency":
+			case strLatency:
 				return buf.WriteString(stop.Sub(start).String())
-			case "status":
+			case strStatus:
 				return buf.WriteString(strconv.Itoa(c.Fasthttp.Response.StatusCode()))
-			case "body":
+			case strBody:
 				return buf.WriteString(c.Body())
-			case "error":
+			case strError:
 				return buf.WriteString(c.Error().Error())
 			default:
 				switch {
-				case strings.HasPrefix(tag, "header:"):
+				case strings.HasPrefix(tag, strHeader):
 					return buf.WriteString(c.Get(tag[7:]))
-				case strings.HasPrefix(tag, "query:"):
+				case strings.HasPrefix(tag, strQuery):
 					return buf.WriteString(c.Query(tag[6:]))
-				case strings.HasPrefix(tag, "form:"):
+				case strings.HasPrefix(tag, strForm):
 					return buf.WriteString(c.FormValue(tag[5:]))
-				case strings.HasPrefix(tag, "cookie:"):
+				case strings.HasPrefix(tag, strCookie):
 					return buf.WriteString(c.Cookies(tag[7:]))
-				case strings.HasPrefix(tag, "body:"):
-					fmt.Println("body<key> is deprecated, please use form<key>")
-					return buf.WriteString(c.FormValue(tag[5:]))
 				}
 			}
 			return 0, nil
