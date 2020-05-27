@@ -34,6 +34,7 @@ const (
 	strBody          = "body"
 	strBytesSent     = "bytesSent"
 	strBytesReceived = "bytesReceived"
+	strRoute         = "route"
 	strError         = "error"
 	strHeader        = "header:"
 	strQuery         = "query:"
@@ -49,7 +50,7 @@ type Config struct {
 	// Format defines the logging format with defined variables
 	// Optional. Default: "${time} ${method} ${path} - ${ip} - ${status} - ${latency}\n"
 	// Possible values:
-	// time, ip, ips, url, host, method, path, protocol
+	// time, ip, ips, url, host, method, path, protocol, route
 	// referer, ua, latency, status, body, error, bytesSent, bytesReceived
 	// header:<key>, query:<key>, form:<key>, cookie:<key>
 	Format string
@@ -137,6 +138,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 				return buf.WriteString(strconv.Itoa(len(c.Fasthttp.Request.Body())))
 			case strBytesSent:
 				return buf.WriteString(strconv.Itoa(len(c.Fasthttp.Response.Body())))
+			case strRoute:
+				return buf.WriteString(c.Route().Path)
 			case strError:
 				return buf.WriteString(c.Error().Error())
 			default:
