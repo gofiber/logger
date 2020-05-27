@@ -19,24 +19,26 @@ import (
 
 // Filter variables
 const (
-	strTime     = "time"
-	strReferer  = "referer"
-	strProtocol = "protocol"
-	strIp       = "ip"
-	strIps      = "ips"
-	strHost     = "host"
-	strMethod   = "method"
-	strPath     = "path"
-	strUrl      = "url"
-	strUa       = "ua"
-	strLatency  = "latency"
-	strStatus   = "status"
-	strBody     = "body"
-	strError    = "error"
-	strHeader   = "header:"
-	strQuery    = "query:"
-	strForm     = "form:"
-	strCookie   = "cookie:"
+	strTime          = "time"
+	strReferer       = "referer"
+	strProtocol      = "protocol"
+	strIp            = "ip"
+	strIps           = "ips"
+	strHost          = "host"
+	strMethod        = "method"
+	strPath          = "path"
+	strUrl           = "url"
+	strUa            = "ua"
+	strLatency       = "latency"
+	strStatus        = "status"
+	strBody          = "body"
+	strBytesSent     = "bytesSent"
+	strBytesReceived = "bytesReceived"
+	strError         = "error"
+	strHeader        = "header:"
+	strQuery         = "query:"
+	strForm          = "form:"
+	strCookie        = "cookie:"
 )
 
 // Config ...
@@ -48,7 +50,7 @@ type Config struct {
 	// Optional. Default: "${time} ${method} ${path} - ${ip} - ${status} - ${latency}\n"
 	// Possible values:
 	// time, ip, ips, url, host, method, path, protocol
-	// referer, ua, latency, status, body, error
+	// referer, ua, latency, status, body, error, bytesSent, bytesReceived
 	// header:<key>, query:<key>, form:<key>, cookie:<key>
 	Format string
 	// TimeFormat https://programming.guide/go/format-parse-string-time-date-example.html
@@ -131,6 +133,10 @@ func New(config ...Config) func(*fiber.Ctx) {
 				return buf.WriteString(strconv.Itoa(c.Fasthttp.Response.StatusCode()))
 			case strBody:
 				return buf.WriteString(c.Body())
+			case strBytesReceived:
+				return buf.WriteString(strconv.Itoa(len(c.Fasthttp.Request.Body())))
+			case strBytesSent:
+				return buf.WriteString(strconv.Itoa(len(c.Fasthttp.Response.Body())))
 			case strError:
 				return buf.WriteString(c.Error().Error())
 			default:
