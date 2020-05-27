@@ -15,7 +15,7 @@ import (
 
 func TestNew_withRoutePath(t *testing.T) {
 	routePath := "/test/:param/sufix"
-	format := "route=${routePath}"
+	format := "route=${route}"
 	expectedOutput := "route=/test/:param/sufix"
 
 	// fake output
