@@ -1,3 +1,9 @@
+# Logger
+
+![Test](https://github.com/gofiber/logger/workflows/Test/badge.svg)
+![Security](https://github.com/gofiber/logger/workflows/Security/badge.svg)
+![Linter](https://github.com/gofiber/logger/workflows/Linter/badge.svg)
+
 ### Install
 ```
 go get -u github.com/gofiber/fiber
