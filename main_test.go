@@ -5,12 +5,12 @@
 package logger
 
 import (
-	"github.com/gofiber/fiber"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
+
+	"github.com/gofiber/fiber"
+	"github.com/valyala/bytebufferpool"
 )
 
 func TestNew_withRoutePath(t *testing.T) {
@@ -19,12 +19,11 @@ func TestNew_withRoutePath(t *testing.T) {
 	expectedOutput := "route=/test/:param/sufix"
 
 	// fake output
-	buf := &strings.Builder{}
-	stdout := log.New(buf, "", 0)
-
+	buf := bytebufferpool.Get()
+	defer bytebufferpool.Put(buf)
 	n := New(Config{
 		Format: format,
-		Output: stdout.Writer(),
+		Output: buf,
 	})
 	app := fiber.New()
 	app.Use(n)
