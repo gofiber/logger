@@ -157,7 +157,7 @@ func New(config ...Config) func(*fiber.Ctx) {
 			return 0, nil
 		})
 		if err != nil {
-			buf.WriteString(err.Error())
+			_, _ = buf.WriteString(err.Error())
 		}
 		if _, err := cfg.Output.Write(buf.Bytes()); err != nil {
 			fmt.Println(err)
