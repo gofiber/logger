@@ -1,10 +1,10 @@
 # Logger
 
-![Release](https://img.shields.io/github/release/gofiber/logger.svg)
+[![Release](https://img.shields.io/github/release/gofiber/logger.svg)](https://github.com/gofiber/logger/releases)
 [![Discord](https://img.shields.io/badge/discord-join%20channel-7289DA)](https://gofiber.io/discord)
-![Test](https://github.com/gofiber/logger/workflows/Test/badge.svg)
-![Security](https://github.com/gofiber/logger/workflows/Security/badge.svg)
-![Linter](https://github.com/gofiber/logger/workflows/Linter/badge.svg)
+[![Test](https://github.com/gofiber/logger/workflows/Test/badge.svg)](https://github.com/gofiber/logger/actions?query=workflow%3ATest)
+[![Security](https://github.com/gofiber/logger/workflows/Security/badge.svg)](https://github.com/gofiber/logger/actions?query=workflow%3ASecurity)
+[![Linter](https://github.com/gofiber/logger/workflows/Linter/badge.svg)](https://github.com/gofiber/logger/actions?query=workflow%3ALinter)
 
 ### Install
 ```
