@@ -46,7 +46,7 @@ func TestNew_withRoutePath(t *testing.T) {
 }
 
 func TestNew_withDefaultFormat(t *testing.T) {
-	expectedOutputPattern := regexp.MustCompile(`^\d{2}:\d{2}:\d{2} GET / - 0\.0\.0\.0 - 200 - \d\.\d+.{1,3}
+	expectedOutputPattern := regexp.MustCompile(`^\d{2}:\d{2}:\d{2} GET / - 0\.0\.0\.0 - 200 - \d(\.\d+)?.{1,3}
 $`)
 	// fake output
 	buf := bytebufferpool.Get()
