@@ -19,12 +19,10 @@ func TestNew_withRoutePath(t *testing.T) {
 	format := "route=${route}"
 	expectedOutput := "route=/test/:param/sufix"
 
-	// Output buffer
+	// fake output
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
-
-	app := fiber.New()
-	app.Use(New(Config{
+	n := New(Config{
 		Format: format,
 		Output: buf,
 	}))
