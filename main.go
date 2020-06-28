@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gofiber/fiber"
@@ -80,6 +81,7 @@ func New(config ...Config) func(*fiber.Ctx) {
 	if cfg.Output == nil {
 		cfg.Output = os.Stderr
 	}
+	var mutex sync.RWMutex
 	// Middleware settings
 	tmpl := fasttemplate.New(cfg.Format, "${", "}")
 	timestamp := time.Now().Format(cfg.TimeFormat)
@@ -87,7 +89,9 @@ func New(config ...Config) func(*fiber.Ctx) {
 	if strings.Contains(cfg.Format, "${time}") {
 		go func() {
 			for {
+				mutex.Lock()
 				timestamp = time.Now().Format(cfg.TimeFormat)
+				mutex.Unlock()
 				time.Sleep(250 * time.Millisecond)
 			}
 		}()
@@ -109,6 +113,8 @@ func New(config ...Config) func(*fiber.Ctx) {
 		_, err := tmpl.ExecuteFunc(buf, func(w io.Writer, tag string) (int, error) {
 			switch tag {
 			case strTime:
+				mutex.RLock()
+				defer mutex.RUnlock()
 				return buf.WriteString(timestamp)
 			case strReferer:
 				return buf.WriteString(c.Get(fiber.HeaderReferer))
