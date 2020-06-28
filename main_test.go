@@ -25,7 +25,9 @@ func TestNew_withRoutePath(t *testing.T) {
 	n := New(Config{
 		Format: format,
 		Output: buf,
-	}))
+	})
+	app := fiber.New(&fiber.Settings{DisableStartupMessage: true})
+	app.Use(n)
 
 	app.Get(routePath, func(ctx *fiber.Ctx) {
 		ctx.SendStatus(200)
